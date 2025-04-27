@@ -1,5 +1,7 @@
 # Ignore root node_modules
 node_modules/
+client/node_modules/
+server/node_modules/
 
 # Ignore server node_modules
 server/node_modules/
