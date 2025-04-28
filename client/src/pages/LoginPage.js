@@ -1,12 +1,12 @@
 import React from 'react';
+import AuthForm from '../components/AuthForm';
 
-function LoginPage() {
+const LoginPage = () => {
   return (
     <div>
-      <h1>Login to your account</h1>
-      {/* We will add login form here */}
+      <AuthForm isLogin={true} />
     </div>
   );
-}
+};
 
 export default LoginPage;
