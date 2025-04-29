@@ -1,6 +1,6 @@
 const express = require('express');
 const { createFeedback, getAllFeedbacks } = require('../controllers/feedbackController');
-const { protect, adminOnly } = require('../middleware/authMiddleware');
+const { protect, adminOnly } = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
