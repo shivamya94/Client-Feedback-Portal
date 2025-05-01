@@ -1,84 +1,77 @@
 import React, { useState } from 'react';
-import axios from '../api/axios'; // assuming you created src/api/axios.js
 import { useNavigate } from 'react-router-dom';
+import './AuthForm.css';
+import api from '../api'; // ✅ Correct relative import path // ✅ import your Axios instance (adjust path if needed)
 
 const AuthForm = ({ isLogin }) => {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-  });
+  const [formData, setFormData] = useState({ email: '', password: '', name: '' });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
 
     try {
-      const url = isLogin ? '/auth/login' : '/auth/register';
-      const payload = isLogin
-        ? { email: formData.email, password: formData.password }
-        : formData;
-
-      const response = await axios.post(url, payload);
+      const url = isLogin ? '/api/auth/login' : '/api/auth/register';
+      const { data } = await api.post(url, formData); // ✅ use custom Axios instance
+      setSuccess(data.message);
 
       if (isLogin) {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('role', response.data.role); // optional for role-based access
-        navigate('/dashboard'); // redirect after login
+        localStorage.setItem('token', data.token);
+        navigate('/dashboard');
       } else {
-        alert('Registered successfully! Please log in.');
-        navigate('/login');
+        setTimeout(() => {
+          navigate('/login');
+        }, 1500);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Something went wrong.');
+      setError(err.response?.data?.message || 'Something went wrong');
     }
   };
 
   return (
-    <div className="auth-form-container">
-      <form onSubmit={handleSubmit} className="auth-form">
+    <div className="auth-container">
+      <form className="auth-form" onSubmit={handleSubmit}>
         <h2>{isLogin ? 'Login' : 'Register'}</h2>
-
         {!isLogin && (
           <input
             type="text"
-            name="username"
-            placeholder="Username"
-            value={formData.username}
+            placeholder="Name"
+            name="name"
+            value={formData.name}
             onChange={handleChange}
             required
           />
         )}
-
         <input
           type="email"
-          name="email"
           placeholder="Email"
+          name="email"
           value={formData.email}
           onChange={handleChange}
           required
         />
-
         <input
           type="password"
-          name="password"
           placeholder="Password"
+          name="password"
           value={formData.password}
           onChange={handleChange}
           required
         />
-
         <button type="submit">{isLogin ? 'Login' : 'Register'}</button>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="error-msg">{error}</p>}
+        {success && <p className="success-msg">{success}</p>}
 
-        <div className="auth-link">
+        <div className="switch-link">
           {isLogin ? (
             <p>Don't have an account? <a href="/register">Register</a></p>
           ) : (
@@ -91,3 +84,101 @@ const AuthForm = ({ isLogin }) => {
 };
 
 export default AuthForm;
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import './AuthForm.css';
+// import axios from 'axios';
+
+// const AuthForm = ({ isLogin }) => {
+//   const [formData, setFormData] = useState({ email: '', password: '', name: '' });
+//   const [error, setError] = useState('');
+//   const [success, setSuccess] = useState('');
+//   const navigate = useNavigate();
+
+//   const handleChange = (e) => {
+//     setFormData({ ...formData, [e.target.name]: e.target.value });
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setError('');
+//     setSuccess('');
+
+//     try {
+//       const url = isLogin ? '/api/auth/login' : '/api/auth/register';
+//       const { data } = await axios.post(url, formData);
+//       setSuccess(data.message);
+
+//       if (isLogin) {
+//         localStorage.setItem('token', data.token);
+//         navigate('/dashboard');
+//       } else {
+//         setTimeout(() => {
+//           navigate('/login');
+//         }, 1500);
+//       }
+//     } catch (err) {
+//       setError(err.response?.data?.message || 'Something went wrong');
+//     }
+//   };
+
+//   return (
+//     <div className="auth-container">
+//       <form className="auth-form" onSubmit={handleSubmit}>
+//         <h2>{isLogin ? 'Login' : 'Register'}</h2>
+//         {!isLogin && (
+//           <input
+//             type="text"
+//             placeholder="Name"
+//             name="name"
+//             value={formData.name}
+//             onChange={handleChange}
+//             required
+//           />
+//         )}
+//         <input
+//           type="email"
+//           placeholder="Email"
+//           name="email"
+//           value={formData.email}
+//           onChange={handleChange}
+//           required
+//         />
+//         <input
+//           type="password"
+//           placeholder="Password"
+//           name="password"
+//           value={formData.password}
+//           onChange={handleChange}
+//           required
+//         />
+//         <button type="submit">{isLogin ? 'Login' : 'Register'}</button>
+
+//         {error && <p className="error-msg">{error}</p>}
+//         {success && <p className="success-msg">{success}</p>}
+
+//         <div className="switch-link">
+//           {isLogin ? (
+//             <p>Don't have an account? <a href="/register">Register</a></p>
+//           ) : (
+//             <p>Already have an account? <a href="/login">Login</a></p>
+//           )}
+//         </div>
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default AuthForm;
