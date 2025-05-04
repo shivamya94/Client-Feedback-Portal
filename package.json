@@ -8,6 +8,6 @@
     "server": "npm --prefix server run dev"
   },
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.2"
   }
 }
