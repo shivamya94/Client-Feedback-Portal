@@ -7,7 +7,6 @@ const feedbackRoutes = require('./routes/feedbackRoutes');
 const { errorHandler } = require('./middlewares/errorMiddleware');
 const testRoute = require('./routes/testRoute');
 
-
 dotenv.config();
 connectDB();
 
@@ -15,7 +14,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/test', testRoute);
-
 
 app.use('/api/auth', authRoutes);
 app.use('/api/feedbacks', feedbackRoutes);
